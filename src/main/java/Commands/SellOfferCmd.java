@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import static me.fjerreiro.sentineleconomy.OfferHelper.checkMaxItemInInv;
+
 public class SellOfferCmd implements CommandExecutor {
 
     @Override
@@ -49,8 +51,7 @@ public class SellOfferCmd implements CommandExecutor {
         }
 
         if (quantityOrAll.equalsIgnoreCase("all")) {
-            OfferHelper offerHelper = new OfferHelper();
-            qty = offerHelper.checkMaxItemInInv(player, material);
+            qty = checkMaxItemInInv(player, material);
 
                 if (qty == 0) {
                     player.sendMessage("[SentinelEconomy] You don't have this material in your inventory");
