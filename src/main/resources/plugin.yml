@@ -1,0 +1,10 @@
+name: SentinelEconomy
+version: '${project.version}'
+main: me.fjerreiro.sentineleconomy.SentinelEconomy
+api-version: '1.20'
+prefix: SentinelEconomy
+authors: [Fjerreiro]
+description: Custom features for the economy
+commands:
+  buyoffer:
+  selloffer:
