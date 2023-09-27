@@ -18,13 +18,12 @@ public class OfferHelper {
         return totalAmount;
     }
 
-    public static int calculateEmptySlots(Inventory inventory) {
+    public static int calculateEmptySlots(@NotNull Inventory inventory) {
         int emptySlots = 0;
 
         for (ItemStack itemStack : inventory.getContents()) {
             if (itemStack.getType().isAir()) {
                 emptySlots += 1;
-
             }
         }
         return emptySlots;

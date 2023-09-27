@@ -1,6 +1,8 @@
 package Commands;
 
-import me.fjerreiro.sentineleconomy.OfferHelper;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,7 +25,8 @@ public class SellOfferCmd implements CommandExecutor {
         Player player = (Player) commandSender;
 
         if (strings.length != 3) {
-            player.sendMessage("[SentinelEconomy] Usage: /selloffer <material/hand> <quantity/all> <price per item>");
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Usage: /selloffer <material/hand> <quantity/all> <price per item>", NamedTextColor.WHITE));
+            player.sendMessage(message);
             return true;
         }
 
@@ -38,14 +41,16 @@ public class SellOfferCmd implements CommandExecutor {
             material = mainHandItemStack.getType();
 
             if (material == Material.AIR) {
-                player.sendMessage("[SentinelEconomy] Your main hand is empty");
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Your main hand is empty", NamedTextColor.WHITE));
+                player.sendMessage(message);
                 return true;
             }
         } else {
             material = Material.matchMaterial(materialOrHand);
 
             if (material == null) {
-                player.sendMessage("[SentinelEconomy] Invalid material name");
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid material name", NamedTextColor.WHITE));
+                player.sendMessage(message);
                 return true;
             }
         }
@@ -54,14 +59,16 @@ public class SellOfferCmd implements CommandExecutor {
             qty = checkMaxItemInInv(player, material);
 
                 if (qty == 0) {
-                    player.sendMessage("[SentinelEconomy] You don't have this material in your inventory");
+                    final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have this material in your inventory", NamedTextColor.WHITE));
+                    player.sendMessage(message);
                     return true;
                 }
         } else {
             try {
                 qty = Integer.parseInt(strings[1]);
             } catch (NumberFormatException e) {
-                player.sendMessage("[SentinelEconomy] Invalid quantity. Please enter a valid number or 'all'.");
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid quantity. Please enter a valid number or 'all'.", NamedTextColor.WHITE));
+                player.sendMessage(message);
                 return true;
             }
         }
@@ -69,7 +76,8 @@ public class SellOfferCmd implements CommandExecutor {
         try {
             price = Integer.parseInt(strings[2]);
         } catch (NumberFormatException e) {
-            player.sendMessage("[SentinelEconomy] Invalid price. Please enter a valid number.");
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid price. Please enter a valid number.", NamedTextColor.WHITE));
+            player.sendMessage(message);
             return true;
         }
 
@@ -77,9 +85,11 @@ public class SellOfferCmd implements CommandExecutor {
 
         if (player.getInventory().containsAtLeast(itemStackToList, qty)) {
             player.getInventory().removeItem(itemStackToList);
-            player.sendMessage("[SentinelEconomy] You listed " + qty + " " + material + " for $" + (price*qty));
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You listed " + qty + " " + material + " for $" + (price*qty), NamedTextColor.WHITE));
+            player.sendMessage(message);
         } else {
-            player.sendMessage("[SentinelEconomy] You don't have enough of that item to make this listing.");
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have enough of that item to make this listing.", NamedTextColor.WHITE));
+            player.sendMessage(message);
             return true;
         }
         return true;
