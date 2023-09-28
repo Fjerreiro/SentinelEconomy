@@ -31,10 +31,7 @@ public class SellOfferCmd implements CommandExecutor {
         }
 
         String materialOrHand = strings[0];
-        String quantityOrAll = strings[1];
         Material material;
-        int qty;
-        int price;
 
         if (materialOrHand.equalsIgnoreCase("hand")) {
             ItemStack mainHandItemStack = player.getInventory().getItemInMainHand();
@@ -55,6 +52,9 @@ public class SellOfferCmd implements CommandExecutor {
             }
         }
 
+        String quantityOrAll = strings[1];
+        int qty;
+
         if (quantityOrAll.equalsIgnoreCase("all")) {
             qty = checkMaxItemInInv(player, material);
 
@@ -72,6 +72,8 @@ public class SellOfferCmd implements CommandExecutor {
                 return true;
             }
         }
+
+        int price;
 
         try {
             price = Integer.parseInt(strings[2]);

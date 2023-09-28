@@ -8,3 +8,4 @@ description: Custom features for the economy
 commands:
   buyoffer:
   selloffer:
+depend: [Vault]
