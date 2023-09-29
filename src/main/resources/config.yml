@@ -1,2 +1,2 @@
-# 0.1 represents 1%, 1.0 represents 100%
-ListingTax: 0.5
+# 0.01 represents 1%, 1.0 represents 100%. Do not put negative values here! Default: 5%
+ListingTax: 0.05

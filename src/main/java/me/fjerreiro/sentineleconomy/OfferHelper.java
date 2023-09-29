@@ -1,5 +1,6 @@
 package me.fjerreiro.sentineleconomy;
 
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -27,5 +28,9 @@ public class OfferHelper {
             }
         }
         return emptySlots;
+    }
+
+    public static boolean checkBalanceForTax(Player player, Economy economy, double listingTax) {
+        return economy.getBalance(player) > listingTax;
     }
 }

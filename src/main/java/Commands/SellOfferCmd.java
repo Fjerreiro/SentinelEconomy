@@ -1,5 +1,6 @@
 package Commands;
 
+import me.fjerreiro.sentineleconomy.OfferHelper;
 import me.fjerreiro.sentineleconomy.SentinelEconomy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -86,13 +87,25 @@ public class SellOfferCmd implements CommandExecutor {
         }
 
         ItemStack itemStackToList = new ItemStack(material, qty);
-        Economy economy = SentinelEconomy.getEconomy();
 
         if (player.getInventory().containsAtLeast(itemStackToList, qty)) {
-            player.getInventory().removeItem(itemStackToList);
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You listed " + qty + " " + material + " for $" + (price*qty), NamedTextColor.WHITE));
-            player.sendMessage(message);
-            player.sendMessage(String.valueOf(listingTax));
+            int totalPrice = price * qty;
+            Economy economy = SentinelEconomy.getEconomy();
+            double listingTax = SentinelEconomy.getPlugin().getConfig().getDouble("ListingTax");
+            double totalTax = listingTax * totalPrice;
+
+            if (OfferHelper.checkBalanceForTax(player, economy, totalTax)) {
+                player.getInventory().removeItem(itemStackToList);
+                economy.withdrawPlayer(player, totalTax);
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You listed " + qty + " " + material + " for $" + totalPrice + ".", NamedTextColor.WHITE));
+                player.sendMessage(message);
+                final TextComponent message2 = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You paid $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
+                player.sendMessage(message2);
+            } else {
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You need at least $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
+                player.sendMessage(message);
+            }
+
         } else {
             final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have enough of that item to make this listing.", NamedTextColor.WHITE));
             player.sendMessage(message);
