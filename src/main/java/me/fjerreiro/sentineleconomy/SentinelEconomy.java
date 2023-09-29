@@ -1,5 +1,6 @@
 package me.fjerreiro.sentineleconomy;
 
+import commands.BuyOfferCmd;
 import commands.SellOfferCmd;
 import database.Database;
 import net.milkbowl.vault.economy.Economy;
@@ -28,6 +29,7 @@ public final class SentinelEconomy extends JavaPlugin {
 
         //Register the commands that are used in this plugin.
         getCommand("selloffer").setExecutor(new SellOfferCmd(this));
+        getCommand("buyoffer").setExecutor(new BuyOfferCmd(this));
 
         //Set up the hook between Vault and SentinelEconomy.
         if (!setupEconomy() ) {
