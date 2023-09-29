@@ -1,16 +1,20 @@
 package me.fjerreiro.sentineleconomy;
 
-import Commands.BuyOfferCmd;
-import Commands.SellOfferCmd;
+import commands.SellOfferCmd;
+import database.Database;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
 
 public final class SentinelEconomy extends JavaPlugin {
 
     private static Plugin plugin;
     private static Economy econ = null;
+    private Database database;
 
     @Override
     public void onEnable() {
@@ -20,10 +24,10 @@ public final class SentinelEconomy extends JavaPlugin {
         //Initialize the config for the first connection.
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+        getLogger().finest("Config file successfully loaded.");
 
         //Register the commands that are used in this plugin.
-        getCommand("buyoffer").setExecutor(new BuyOfferCmd());
-        getCommand("selloffer").setExecutor(new SellOfferCmd());
+        getCommand("selloffer").setExecutor(new SellOfferCmd(this));
 
         //Set up the hook between Vault and SentinelEconomy.
         if (!setupEconomy() ) {
@@ -31,10 +35,29 @@ public final class SentinelEconomy extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        try {
+            if (!getDataFolder().exists()) {
+                getLogger().finest("Datafolder doesn't exist yet, making one now.");
+                getDataFolder().mkdirs();
+            }
+
+            database = new Database(getDataFolder().getAbsolutePath() + "/database.db");
+            getLogger().fine("SQLite successfully connected.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            getLogger().severe("Failed to connect to the database!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
     public void onDisable() {
+        try {
+            database.closeConnection();
+        } catch (SQLException e) {
+            getLogger().severe("Failed to close connection!");
+        }
     }
 
     //Methods to set up the Economy hook for Vault.
@@ -56,5 +79,9 @@ public final class SentinelEconomy extends JavaPlugin {
 
     public static Plugin getPlugin() {
         return plugin;
+    }
+
+    public Database getDatabase() {
+        return this.database;
     }
 }
