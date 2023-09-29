@@ -1,8 +1,10 @@
 package Commands;
 
+import me.fjerreiro.sentineleconomy.SentinelEconomy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -84,11 +86,13 @@ public class SellOfferCmd implements CommandExecutor {
         }
 
         ItemStack itemStackToList = new ItemStack(material, qty);
+        Economy economy = SentinelEconomy.getEconomy();
 
         if (player.getInventory().containsAtLeast(itemStackToList, qty)) {
             player.getInventory().removeItem(itemStackToList);
             final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You listed " + qty + " " + material + " for $" + (price*qty), NamedTextColor.WHITE));
             player.sendMessage(message);
+            player.sendMessage(String.valueOf(listingTax));
         } else {
             final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have enough of that item to make this listing.", NamedTextColor.WHITE));
             player.sendMessage(message);
