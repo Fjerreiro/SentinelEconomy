@@ -92,7 +92,7 @@ public class BuyOfferCmd implements CommandExecutor {
 
                 final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You created a buy listing for " + qty + " " + material + " for $" + totalPrice + ".", NamedTextColor.WHITE));
                 player.sendMessage(message);
-                final TextComponent message2 = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You paid $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
+                final TextComponent message2 = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You paid $" + totalMoney + " to make this listing.", NamedTextColor.WHITE));
                 player.sendMessage(message2);
 
             } else {
