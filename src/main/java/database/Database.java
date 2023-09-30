@@ -26,20 +26,26 @@ public class Database {
                 uuid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                 player TEXT NOT NULL,
                 material TEXT NOT NULL,
+                nbt TEXT,
+                custom BOOLEAN DEFAULT FALSE,
                 price REAL NOT NULL,
-                date TEXT NOT NULL,
-                quantitytosell INTEGER NOT NULL,
-                quantitytoclaim INTEGER NOT NULL)
+                totalqty INTEGER NOT NULL,
+                soldqty INTEGER NOT NULL,
+                money REAL DEFAULT 0,
+                date TEXT NOT NULL)               
                 """);
         statement.execute("""
                 CREATE TABLE IF NOT EXISTS buyoffers (
                 uuid INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
                 player TEXT NOT NULL,
                 material TEXT NOT NULL,
+                nbt TEXT,
+                custom BOOLEAN DEFAULT FALSE,
                 price REAL NOT NULL,
-                date TEXT NOT NULL,
-                quantitytobuy INTEGER NOT NULL,
-                quantitytoclaim INTEGER NOT NULL)
+                totalqty INTEGER NOT NULL,
+                boughtqty INTEGER NOT NULL,
+                money REAL DEFAULT 0,
+                date TEXT NOT NULL)
                 """);
         statement.close();
     }
