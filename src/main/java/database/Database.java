@@ -60,6 +60,7 @@ public class Database {
         }
     }
 
+
     public void addBuyOfferToDB(Player player, Material material, double price, String date, int qty) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO buyoffers (player, material, price, date, quantitytobuy, quantitytoclaim) VALUES (?, ?, ?, ?, ?, ?)")) {
             preparedStatement.setString(1, player.getName());

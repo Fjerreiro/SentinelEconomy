@@ -11,7 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemStack;;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
@@ -34,39 +34,34 @@ public class SellOfferCmd implements CommandExecutor {
 
         Player player = (Player) commandSender;
 
-        if (strings.length != 3) {
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Usage: /selloffer <material/hand> <quantity/all> <price per item>", NamedTextColor.WHITE));
+        if (strings.length != 2) {
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Usage: /selloffer <quantity/all> <price per item>", NamedTextColor.WHITE));
             player.sendMessage(message);
             return true;
         }
 
-        String materialOrHand = strings[0];
-        Material material;
 
-        if (materialOrHand.equalsIgnoreCase("hand")) {
-            ItemStack mainHandItemStack = player.getInventory().getItemInMainHand();
-            material = mainHandItemStack.getType();
 
-            if (material == Material.AIR) {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Your main hand is empty", NamedTextColor.WHITE));
-                player.sendMessage(message);
-                return true;
-            }
-        } else {
-            material = Material.matchMaterial(materialOrHand);
+        ItemStack itemStackInHand = player.getInventory().getItemInMainHand();
+        Material materialInHand = itemStackInHand.getType();
 
-            if (material == null) {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid material name", NamedTextColor.WHITE));
-                player.sendMessage(message);
-                return true;
-            }
+        if (materialInHand == Material.AIR) {
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Your main hand is empty", NamedTextColor.WHITE));
+            player.sendMessage(message);
+            return true;
         }
 
-        String quantityOrAll = strings[1];
+        if (itemStackInHand.hasItemMeta()) {
+            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Listing items with NBT tags is not yet supported!", NamedTextColor.WHITE));
+            player.sendMessage(message);
+            return true;
+        }
+
+        String quantityOrAll = strings[0];
         int qty;
 
         if (quantityOrAll.equalsIgnoreCase("all")) {
-            qty = checkMaxItemInInv(player, material);
+            qty = checkMaxItemInInv(player, itemStackInHand);
 
                 if (qty == 0) {
                     final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have this material in your inventory", NamedTextColor.WHITE));
@@ -75,7 +70,7 @@ public class SellOfferCmd implements CommandExecutor {
                 }
         } else {
             try {
-                qty = Integer.parseInt(strings[1]);
+                qty = Integer.parseInt(strings[0]);
             } catch (NumberFormatException e) {
                 final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid quantity. Please enter a valid number or 'all'.", NamedTextColor.WHITE));
                 player.sendMessage(message);
@@ -86,14 +81,14 @@ public class SellOfferCmd implements CommandExecutor {
         int price;
 
         try {
-            price = Integer.parseInt(strings[2]);
+            price = Integer.parseInt(strings[1]);
         } catch (NumberFormatException e) {
             final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid price. Please enter a valid number.", NamedTextColor.WHITE));
             player.sendMessage(message);
             return true;
         }
 
-        ItemStack itemStackToList = new ItemStack(material, qty);
+        ItemStack itemStackToList = itemStackInHand.asQuantity(qty);
 
         if (player.getInventory().containsAtLeast(itemStackToList, qty)) {
             int totalPrice = price * qty;
@@ -105,9 +100,9 @@ public class SellOfferCmd implements CommandExecutor {
             if (OfferHelper.checkBalanceForTax(player, economy, totalTax)) {
                 player.getInventory().removeItem(itemStackToList);
                 economy.withdrawPlayer(player, totalTax);
-                this.sentinelEconomyPlugin.getDatabase().addSellOfferToDB(player, material, price, date, qty);
+                this.sentinelEconomyPlugin.getDatabase().addSellOfferToDB(player, materialInHand, price, date, qty);
 
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You created a sell listing for " + qty + " " + material + " for $" + totalPrice + ".", NamedTextColor.WHITE));
+                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You created a sell listing for " + qty + " " + materialInHand + " for $" + totalPrice + ".", NamedTextColor.WHITE));
                 player.sendMessage(message);
                 final TextComponent message2 = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You paid $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
                 player.sendMessage(message2);

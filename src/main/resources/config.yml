@@ -1,2 +1,5 @@
-# 0.01 represents 1%, 1.0 represents 100%. Do not put negative values here! Default: 5%
+# 0.01 represents 1%, 1.0 represents 100%. Do not put negative values here!
 ListingTax: 0.05
+
+# Set the number of the maximum open offers for a single player. This number is sell- and buy offers combined!
+MaxOffers: 6

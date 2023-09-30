@@ -1,5 +1,6 @@
 package me.fjerreiro.sentineleconomy;
 
+import net.md_5.bungee.api.chat.hover.content.Item;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,11 +9,11 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class OfferHelper {
-    public static int checkMaxItemInInv(@NotNull Player player, Material materialToCheck) {
+    public static int checkMaxItemInInv(@NotNull Player player, ItemStack itemStackToCheck) {
         int totalAmount = 0;
 
         for (ItemStack itemStack : player.getInventory().getContents()) {
-            if (itemStack != null && itemStack.getType() == materialToCheck) {
+            if (itemStack != null && itemStack == itemStackToCheck) {
                 totalAmount += itemStack.getAmount();
             }
         }
