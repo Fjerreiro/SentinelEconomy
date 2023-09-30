@@ -13,7 +13,7 @@ public class OfferHelper {
         int totalAmount = 0;
 
         for (ItemStack itemStack : player.getInventory().getContents()) {
-            if (itemStack != null && itemStack == itemStackToCheck) {
+            if (itemStack != null && itemStack.isSimilar(itemStackToCheck)) {
                 totalAmount += itemStack.getAmount();
             }
         }

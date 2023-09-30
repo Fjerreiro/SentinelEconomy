@@ -98,9 +98,11 @@ public class SellOfferCmd implements CommandExecutor {
             String date = String.valueOf(LocalDateTime.now());
 
             if (OfferHelper.checkBalanceForTax(player, economy, totalTax)) {
+               // Hier nog if logica maken dat er alleen dingen uit de inv worden gehaald als db write succesvol is.
+                this.sentinelEconomyPlugin.getDatabase().addSellOfferToDB(player, materialInHand, price, date, qty);
+
                 player.getInventory().removeItem(itemStackToList);
                 economy.withdrawPlayer(player, totalTax);
-                this.sentinelEconomyPlugin.getDatabase().addSellOfferToDB(player, materialInHand, price, date, qty);
 
                 final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You created a sell listing for " + qty + " " + materialInHand + " for $" + totalPrice + ".", NamedTextColor.WHITE));
                 player.sendMessage(message);
