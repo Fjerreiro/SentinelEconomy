@@ -1,7 +1,6 @@
 package objects;
 
 public class SellOffer {
-
     private String uuid;
     private String player;
     private String material;
@@ -13,21 +12,26 @@ public class SellOffer {
     private double money;
     private String date;
 
-    public SellOffer() {
-        uuid = null;
-        player = null;
-        material = null;
-        nbt = null;
-        custom = false;
-        price = 0.0;
-        totalqty = 0;
-        soldQty = 0;
-        money = 0;
-        date = null;
+    public SellOffer(String uuid, String player, String material, String nbt, Boolean custom, double price, int totalqty, int soldQty, double money, String date) {
+        this.uuid = uuid;
+        this.player = player;
+        this.material = material;
+        this.nbt = nbt;
+        this.custom = custom;
+        this.price = price;
+        this.totalqty = totalqty;
+        this.soldQty = soldQty;
+        this.money = money;
+        this.date = date;
     }
 
+    //Get and set methods
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getPlayer() {
@@ -82,8 +86,8 @@ public class SellOffer {
         return soldQty;
     }
 
-    public void setSoldQty(int soldqty) {
-        this.soldQty = soldqty;
+    public void setSoldQty(int soldQty) {
+        this.soldQty = soldQty;
     }
 
     public double getMoney() {
@@ -100,5 +104,37 @@ public class SellOffer {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    //Change object
+    public void changeSellOffer(String uuid, String player, String material, String nbt, boolean custom, double price, int totalqty, int soldQty, double money, String date) {
+            if (uuid != null) {
+                this.uuid = uuid;
+            }
+            if (player != null) {
+                this.player = player;
+            }
+            if (material != null) {
+                this.material = material;
+            }
+            if (nbt != null) {
+                this.nbt = nbt;
+            }
+            this.custom = custom;
+            if (price >= 0) {
+                this.price = price;
+            }
+            if (totalqty >= 0) {
+                this.totalqty = totalqty;
+            }
+            if (soldQty >= 0) {
+                this.soldQty = soldQty;
+            }
+            if (money >= 0) {
+                this.money = money;
+            }
+            if (date != null) {
+                this.date = date;
+            }
     }
 }

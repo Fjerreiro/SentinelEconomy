@@ -13,21 +13,25 @@ public class BuyOffer {
     private double money;
     private String date;
 
-    public BuyOffer() {
-        uuid = null;
-        player = null;
-        material = null;
-        nbt = null;
-        custom = false;
-        price = 0.0;
-        totalqty = 0;
-        boughtqty = 0;
-        money = 0;
-        date = null;
+    public BuyOffer(String uuid, String player, String material, String nbt, boolean custom, double price, int totalqty, int boughtqty, double money, String date) {
+        this.uuid = uuid;
+        this.player = player;
+        this.material = material;
+        this.nbt = nbt;
+        this.custom = custom;
+        this.price = price;
+        this.totalqty = totalqty;
+        this.boughtqty = boughtqty;
+        this.money = money;
+        this.date = date;
     }
 
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getPlayer() {
@@ -100,5 +104,36 @@ public class BuyOffer {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void changeBuyOffer(String uuid, String player, String material, String nbt, boolean custom, double price, int totalqty, int boughtqty, double money, String date) {
+        if (uuid != null) {
+            this.uuid = uuid;
+        }
+        if (player != null) {
+            this.player = player;
+        }
+        if (material != null) {
+            this.material = material;
+        }
+        if (nbt != null) {
+            this.nbt = nbt;
+        }
+        this.custom = custom;
+        if (price >= 0) {
+            this.price = price;
+        }
+        if (totalqty >= 0) {
+            this.totalqty = totalqty;
+        }
+        if (boughtqty >= 0) {
+            this.boughtqty = boughtqty;
+        }
+        if (money >= 0) {
+            this.money = money;
+        }
+        if (date != null) {
+            this.date = date;
+        }
     }
 }
