@@ -1,8 +1,9 @@
 package me.fjerreiro.sentineleconomy;
 
-import net.md_5.bungee.api.chat.hover.content.Item;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,11 @@ public class OfferHelper {
             }
         }
         return totalAmount;
+    }
+
+    public static void sendValidationMessage(@NotNull Player player, String string) {
+        final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text(string, NamedTextColor.WHITE));
+        player.sendMessage(message);
     }
 
     public static int calculateEmptySlots(@NotNull Inventory inventory) {
