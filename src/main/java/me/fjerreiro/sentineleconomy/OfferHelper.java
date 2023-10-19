@@ -10,10 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class OfferHelper {
-    public static int checkMaxItemInInv(@NotNull Player player, ItemStack itemStackToCheck) {
+    public static int checkMaxItemInInv(@NotNull Inventory inventory, ItemStack itemStackToCheck) {
         int totalAmount = 0;
 
-        for (ItemStack itemStack : player.getInventory().getContents()) {
+        for (ItemStack itemStack : inventory.getContents()) {
             if (itemStack != null && itemStack.isSimilar(itemStackToCheck)) {
                 totalAmount += itemStack.getAmount();
             }
@@ -24,20 +24,5 @@ public class OfferHelper {
     public static void sendValidationMessage(@NotNull Player player, String string) {
         final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text(string, NamedTextColor.WHITE));
         player.sendMessage(message);
-    }
-
-    public static int calculateEmptySlots(@NotNull Inventory inventory) {
-        int emptySlots = 0;
-
-        for (ItemStack itemStack : inventory.getContents()) {
-            if (itemStack.getType().isAir()) {
-                emptySlots += 1;
-            }
-        }
-        return emptySlots;
-    }
-
-    public static boolean checkBalanceForTax(Player player, Economy economy, double listingTax) {
-        return economy.getBalance(player) > listingTax;
     }
 }

@@ -1,12 +1,7 @@
 package commands;
 
-import database.Database;
+import database.SellOfferDB;
 import me.fjerreiro.sentineleconomy.OfferHelper;
-import me.fjerreiro.sentineleconomy.SentinelEconomy;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.milkbowl.vault.economy.Economy;
 import objects.SellOffer;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -19,152 +14,108 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 
-import static java.lang.Math.round;
-import static me.fjerreiro.sentineleconomy.OfferHelper.checkMaxItemInInv;
-
 public class SellOfferCmd implements CommandExecutor {
 
-    private final SentinelEconomy sentinelEconomyPlugin;
-    SellOffer sellOffer = new SellOffer();
+    private SellOfferDB sellOfferDB;
 
-    public SellOfferCmd(SentinelEconomy sentinelEconomyPlugin) {
-        this.sentinelEconomyPlugin = sentinelEconomyPlugin;
+    public SellOfferCmd(SellOfferDB sellOfferDB) {
+        this.sellOfferDB = sellOfferDB;
     }
-
-
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+
+        // Check if command sender is a player.
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("[SentinelEconomy] Only players can use this command.");
             return true;
         }
 
         Player player = (Player) commandSender;
-        Database database = this.sentinelEconomyPlugin.getDatabase();
-        sellOffer.setPlayer(player.getName());
 
+        // Check if player uses 3 arguments in their command.
         if (strings.length != 3) {
             OfferHelper.sendValidationMessage(player, "Usage: /selloffer <hand/material> <quantity/all> <price per item>");
             return true;
         }
 
-        ItemStack itemStack = null;
+        // Create sellOffer object and prepare variables.
+        SellOffer sellOffer = new SellOffer(null, player.getName(), null, null, false, 0, 0, 0, 0, null);
+        ItemStack itemStackType;
         Material material;
         Inventory inventory = player.getInventory();
 
+
+        // Check the third argument for a valid integer and set it for price
+        try {
+            sellOffer.setPrice(Integer.parseInt(strings[2]));
+        } catch (NumberFormatException e) {
+            OfferHelper.sendValidationMessage(player, "Invalid price. Please enter a valid number.");
+            return true;
+        }
+
+        // Set the material of the offer based on "hand" or material name.
         if (strings[0].equalsIgnoreCase("hand")) {
-            itemStack = player.getInventory().getItemInMainHand();
-            material = itemStack.getType();
+            itemStackType = player.getInventory().getItemInMainHand();
+            material = itemStackType.getType();
             if (material == Material.AIR) {
                 OfferHelper.sendValidationMessage(player, "Your main hand is empty.");
                 return true;
             }
-            sellOffer.setMaterial(String.valueOf(material));
+            // Check for NBT tags. To be supported in the future with custom methods.
+            if (itemStackType.hasItemMeta()) {
+                OfferHelper.sendValidationMessage(player, "Listing items with NBT tags is not yet supported!");
+                return true;
+            }
         } else {
+            // Try to match a material by given input.
             material = Material.matchMaterial(strings[0]);
             if (material == null || material.isAir()) {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Can't match a material with the given input.", NamedTextColor.WHITE));
-                player.sendMessage(message);
-                return true;
-            }            
-            sellOffer.setMaterial(String.valueOf(material));            
-            
-            for (ItemStack itemStackToCheck : inventory.getContents()) {
-                if (itemStackToCheck != null && itemStackToCheck.getType() == material && itemStackToCheck.hasItemMeta() == false) {
-                        itemStack = itemStackToCheck;
-                        break;
-                    }
-                }
-            }
-            if (itemStack == null) {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have this material in your inventory", NamedTextColor.WHITE));
-                player.sendMessage(message);
+                OfferHelper.sendValidationMessage(player, "Can't match a material with the given input.");
                 return true;
             }
-            
-
-        if (material == Material.AIR) {
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Your main hand is empty", NamedTextColor.WHITE));
-            player.sendMessage(message);
-            return true;
+            itemStackType = new ItemStack(material);
         }
+        sellOffer.setMaterial(String.valueOf(material));
 
-        if (itemStack.hasItemMeta()) {
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Listing items with NBT tags is not yet supported!", NamedTextColor.WHITE));
-            player.sendMessage(message);
-            return true;
-        }
-
-        String quantityOrAll = strings[1];
-        int qty;
-
-        if (quantityOrAll.equalsIgnoreCase("all")) {
-            qty = checkMaxItemInInv(player, itemStack);
-
-                if (qty == 0) {
-                    final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have this material in your inventory", NamedTextColor.WHITE));
-                    player.sendMessage(message);
-                    return true;
-                }
+        // Determine the quantity of the offer.
+        if (strings[1].equalsIgnoreCase("all")) {
+            int qty = OfferHelper.checkMaxItemInInv(inventory, itemStackType);
+            if (qty == 0) {
+                OfferHelper.sendValidationMessage(player, "You don't have this material in your inventory");
+                return true;
+            }
+            sellOffer.setTotalqty(qty);
         } else {
             try {
-                qty = Integer.parseInt(strings[1]);
-                sellOffer.setTotalqty(qty);
+                sellOffer.setTotalqty(Integer.parseInt(strings[1]));
             } catch (NumberFormatException e) {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid quantity. Please enter a valid number or 'all'.", NamedTextColor.WHITE));
-                player.sendMessage(message);
+                OfferHelper.sendValidationMessage(player, "Invalid quantity. Please enter a valid number or 'all'.");
                 return true;
             }
         }
 
-        int price;
+        // Create a dummy itemStack with the same material and set it with the correct quantity, so it can be used to check if the player has enough.
+        int totalQty = sellOffer.getTotalqty();
+        ItemStack itemStackToList = itemStackType.asQuantity(sellOffer.getTotalqty());
+        double totalPrice = totalQty * sellOffer.getPrice();
 
-        try {
-            price = Integer.parseInt(strings[2]);
-            sellOffer.setPrice(price);
-        } catch (NumberFormatException e) {
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("Invalid price. Please enter a valid number.", NamedTextColor.WHITE));
-            player.sendMessage(message);
-            return true;
-        }
+        if (inventory.containsAtLeast(itemStackToList, totalQty)) {
 
-        ItemStack itemStackToList = itemStack.asQuantity(qty);
 
-        if (inventory.containsAtLeast(itemStackToList, qty)) {
-            int totalPrice = price * qty;
-            Economy economy = SentinelEconomy.getEconomy();
-            double listingTax = SentinelEconomy.getPlugin().getConfig().getDouble("ListingTax");
-            double totalTax = listingTax * totalPrice;
-            totalTax = (double) round(totalTax * 10000) /10000;
-            String date = String.valueOf(LocalDateTime.now());
+            // Insert the selloffer into the database
+            sellOffer.setDate(String.valueOf(LocalDateTime.now()));
 
-            if (OfferHelper.checkBalanceForTax(player, economy, totalTax)) {
-                sellOffer.setDate(date);
-                database.immediateSale(player, sellOffer);
-
-                if (database.addSellOfferToDB(player, sellOffer)) {
-                    player.getInventory().removeItemAnySlot(itemStackToList);
-                    economy.withdrawPlayer(player, totalTax);
-                } else {
-                    return false;
-                }
-
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You created a sell listing for " + qty + " " + material + " for $" + totalPrice + ".", NamedTextColor.WHITE));
-                player.sendMessage(message);
-                final TextComponent message2 = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You paid $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
-                player.sendMessage(message2);
-
+            if (sellOfferDB.insertSellOffer(player, sellOffer)) {
+                System.out.println(player.getInventory().removeItemAnySlot(itemStackToList));
+                OfferHelper.sendValidationMessage(player, "You created a sell listing for " + totalQty + " " + material + " for $" + totalPrice + ".");
             } else {
-                final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You need at least $" + totalTax + " to make this listing.", NamedTextColor.WHITE));
-                player.sendMessage(message);
-                return true;
+                return false;
             }
         } else {
-            final TextComponent message = Component.text("[SentinelEconomy] ", NamedTextColor.DARK_AQUA).append(Component.text("You don't have enough of that item to make this listing.", NamedTextColor.WHITE));
-            player.sendMessage(message);
+            OfferHelper.sendValidationMessage(player, "You don't have enough of that item to make this listing.");
             return true;
         }
         return true;
-    }  
+    }
 }

@@ -1,10 +1,9 @@
 package me.fjerreiro.sentineleconomy;
 
-import commands.BuyOfferCmd;
 import commands.SellOfferCmd;
-import database.Database;
+import database.SellOfferDB;
+import database.DatabaseConnection;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,51 +14,39 @@ public final class SentinelEconomy extends JavaPlugin {
 
     private static Plugin plugin;
     private static Economy econ = null;
-    private Database database;
+    private DatabaseConnection databaseConnection;
+    private SellOfferDB sellOfferDB;
 
     @Override
     public void onEnable() {
-        //Initialization:
+        //Plugin Initialization:
         plugin = this;
 
-        //Initialize the config for the first connection.
-        getConfig().options().copyDefaults();
-        saveDefaultConfig();
-        getLogger().finest("Config file successfully loaded.");
-
-        //Register the commands that are used in this plugin.
-        getCommand("selloffer").setExecutor(new SellOfferCmd(this));
-        getCommand("buyoffer").setExecutor(new BuyOfferCmd(this));
-
-        //Set up the hook between Vault and SentinelEconomy.
-        if (!setupEconomy() ) {
-            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
+        //Database initialization:
         try {
             if (!getDataFolder().exists()) {
                 getLogger().finest("Datafolder doesn't exist yet, making one now.");
                 getDataFolder().mkdirs();
             }
-
-            database = new Database(getDataFolder().getAbsolutePath() + "/database.db");
-            getLogger().fine("SQLite successfully connected.");
+            databaseConnection = new DatabaseConnection(getDataFolder().getAbsolutePath() + "/database.db");
+            sellOfferDB = new SellOfferDB(databaseConnection);
         } catch (SQLException e) {
             e.printStackTrace();
-            getLogger().severe("Failed to connect to the database!");
-            Bukkit.getPluginManager().disablePlugin(this);
+        }
+
+        //Command initialization:
+        getCommand("selloffer").setExecutor(new SellOfferCmd(sellOfferDB));
+
+        //Set up the hook between Vault and SentinelEconomy.
+        if (!setupEconomy() ) {
+            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
         }
     }
 
     @Override
     public void onDisable() {
-        try {
-            database.closeConnection();
-        } catch (SQLException e) {
-            getLogger().severe("Failed to close connection!");
-        }
+        databaseConnection.closeConnection();
     }
 
     //Methods to set up the Economy hook for Vault.
@@ -83,7 +70,7 @@ public final class SentinelEconomy extends JavaPlugin {
         return plugin;
     }
 
-    public Database getDatabase() {
-        return this.database;
+    public SellOfferDB getDatabase() {
+        return this.sellOfferDB;
     }
 }
