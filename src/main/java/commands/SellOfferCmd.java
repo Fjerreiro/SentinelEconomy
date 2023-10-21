@@ -1,6 +1,6 @@
 package commands;
 
-import database.SellOfferDB;
+import database.dao.SellOfferDB;
 import me.fjerreiro.sentineleconomy.OfferHelper;
 import objects.SellOffer;
 import org.bukkit.Material;
@@ -48,7 +48,7 @@ public class SellOfferCmd implements CommandExecutor {
 
         // Check the third argument for a valid integer and set it for price
         try {
-            sellOffer.setPrice(Integer.parseInt(strings[2]));
+            sellOffer.setPrice(Double.parseDouble(strings[2]));
         } catch (NumberFormatException e) {
             OfferHelper.sendValidationMessage(player, "Invalid price. Please enter a valid number.");
             return true;

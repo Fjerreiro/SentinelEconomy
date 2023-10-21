@@ -1,5 +1,6 @@
-package database;
+package database.dao;
 
+import database.connection.DatabaseConnection;
 import me.fjerreiro.sentineleconomy.OfferHelper;
 import objects.SellOffer;
 import org.bukkit.entity.Player;

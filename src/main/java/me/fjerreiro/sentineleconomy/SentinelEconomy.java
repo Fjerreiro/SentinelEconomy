@@ -1,8 +1,10 @@
 package me.fjerreiro.sentineleconomy;
 
+import commands.BuyOfferCmd;
 import commands.SellOfferCmd;
-import database.SellOfferDB;
-import database.DatabaseConnection;
+import database.dao.BuyOfferDB;
+import database.dao.SellOfferDB;
+import database.connection.DatabaseConnection;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,6 +18,7 @@ public final class SentinelEconomy extends JavaPlugin {
     private static Economy econ = null;
     private DatabaseConnection databaseConnection;
     private SellOfferDB sellOfferDB;
+    private BuyOfferDB buyOfferDB;
 
     @Override
     public void onEnable() {
@@ -30,12 +33,15 @@ public final class SentinelEconomy extends JavaPlugin {
             }
             databaseConnection = new DatabaseConnection(getDataFolder().getAbsolutePath() + "/database.db");
             sellOfferDB = new SellOfferDB(databaseConnection);
+            buyOfferDB = new BuyOfferDB(databaseConnection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         //Command initialization:
         getCommand("selloffer").setExecutor(new SellOfferCmd(sellOfferDB));
+        getCommand("buyoffer").setExecutor(new BuyOfferCmd(buyOfferDB));
+
 
         //Set up the hook between Vault and SentinelEconomy.
         if (!setupEconomy() ) {
@@ -70,7 +76,7 @@ public final class SentinelEconomy extends JavaPlugin {
         return plugin;
     }
 
-    public SellOfferDB getDatabase() {
+    public SellOfferDB getSellOfferDB() {
         return this.sellOfferDB;
     }
 }
