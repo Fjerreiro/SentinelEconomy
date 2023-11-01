@@ -9,7 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,7 @@ import static me.fjerreiro.sentineleconomy.SentinelEconomy.getEconomy;
 
 public class BuyOfferCmd implements CommandExecutor {
 
-    private BuyOfferDB buyOfferDB;
+    private final BuyOfferDB buyOfferDB;
 
     public BuyOfferCmd(BuyOfferDB buyOfferDB) {
         this.buyOfferDB = buyOfferDB;
@@ -46,7 +45,6 @@ public class BuyOfferCmd implements CommandExecutor {
         BuyOffer buyOffer = new BuyOffer(null, player.getName(), null, null, false, 0, 0, 0, 0, null);
         ItemStack itemStackType;
         Material material;
-        Inventory inventory = player.getInventory();
 
         // Check the third argument for a valid integer and set it for price.
         double price;

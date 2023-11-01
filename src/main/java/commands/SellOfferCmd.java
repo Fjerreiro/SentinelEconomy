@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 public class SellOfferCmd implements CommandExecutor {
 
-    private SellOfferDB sellOfferDB;
+    private final SellOfferDB sellOfferDB;
 
     public SellOfferCmd(SellOfferDB sellOfferDB) {
         this.sellOfferDB = sellOfferDB;

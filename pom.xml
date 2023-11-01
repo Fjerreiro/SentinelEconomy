@@ -6,7 +6,7 @@
 
     <groupId>me.fjerreiro</groupId>
     <artifactId>SentinelEconomy</artifactId>
-    <version>0.0.0.16</version>
+    <version>0.0.0.17</version>
     <packaging>jar</packaging>
 
     <name>SentinelEconomy</name>
