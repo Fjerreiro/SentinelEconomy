@@ -77,7 +77,6 @@ public class BuyOfferCmd implements CommandExecutor {
         }
         buyOffer.setMoney(totalMoney);
 
-
         // Set the material of the offer based on "hand" or material name.
             if (strings[0].equalsIgnoreCase("hand")) {
                 itemStackType = player.getInventory().getItemInMainHand();
@@ -98,32 +97,18 @@ public class BuyOfferCmd implements CommandExecutor {
                     OfferHelper.sendValidationMessage(player, "Can't match a material with the given input.");
                     return true;
                 }
-                itemStackType = new ItemStack(material);
             }
-        sellOffer.setMaterial(String.valueOf(material));
+        buyOffer.setMaterial(String.valueOf(material));
 
+        // Insert the buyoffer into the database
+            buyOffer.setDate(String.valueOf(LocalDateTime.now()));
 
-        // Create a dummy itemStack with the same material and set it with the correct quantity, so it can be used to check if the player has enough.
-        int totalQty = sellOffer.getTotalqty();
-        ItemStack itemStackToList = itemStackType.asQuantity(sellOffer.getTotalqty());
-        double totalPrice = totalQty * sellOffer.getPrice();
-
-        if (inventory.containsAtLeast(itemStackToList, totalQty)) {
-
-
-            // Insert the selloffer into the database
-            sellOffer.setDate(String.valueOf(LocalDateTime.now()));
-
-            if (sellOfferDB.insertSellOffer(player, sellOffer)) {
-                System.out.println(player.getInventory().removeItemAnySlot(itemStackToList));
-                OfferHelper.sendValidationMessage(player, "You created a sell listing for " + totalQty + " " + material + " for $" + totalPrice + ".");
+            if (buyOfferDB.insertBuyOffer(player, buyOffer)) {
+                economy.withdrawPlayer(player, totalMoney);
+                OfferHelper.sendValidationMessage(player, "You created a buy listing for " + qty + " " + material + " for $" + totalMoney + ".");
             } else {
                 return false;
             }
-        } else {
-            OfferHelper.sendValidationMessage(player, "You don't have enough of that item to make this listing.");
-            return true;
-        }
         return true;
     }
 }

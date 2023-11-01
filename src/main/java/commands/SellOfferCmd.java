@@ -107,14 +107,14 @@ public class SellOfferCmd implements CommandExecutor {
             sellOffer.setDate(String.valueOf(LocalDateTime.now()));
 
             if (sellOfferDB.insertSellOffer(player, sellOffer)) {
-                System.out.println(player.getInventory().removeItemAnySlot(itemStackToList));
+                player.getInventory().removeItemAnySlot(itemStackToList);
                 OfferHelper.sendValidationMessage(player, "You created a sell listing for " + totalQty + " " + material + " for $" + totalPrice + ".");
             } else {
                 return false;
             }
         } else {
             OfferHelper.sendValidationMessage(player, "You don't have enough of that item to make this listing.");
-            return true;
+            return false;
         }
         return true;
     }
