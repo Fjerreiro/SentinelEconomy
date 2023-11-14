@@ -23,23 +23,23 @@ public class BuyOfferDB {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
+            if (resultSet.next()) {
+                // Initialize attributes and create a BuyOffer object
+                String uuid = resultSet.getString("uuid");
+                String player = resultSet.getString("player");
+                String material = resultSet.getString("material");
+                String nbt = resultSet.getString("nbt");
+                boolean custom = resultSet.getBoolean("custom");
+                double price = resultSet.getDouble("price");
+                int totalqty = resultSet.getInt("totalqty");
+                int boughtqty = resultSet.getInt("boughtqty");
+                double money = resultSet.getDouble("money");
+                String date = resultSet.getString("date");
 
-            // Initialize attributes and create a BuyOffer object
-            String uuid = resultSet.getString("uuid");
-            String player = resultSet.getString("player");
-            String material = resultSet.getString("material");
-            String nbt = resultSet.getString("nbt");
-            boolean custom = resultSet.getBoolean("custom");
-            double price = resultSet.getDouble("price");
-            int totalqty = resultSet.getInt("totalqty");
-            int boughtqty = resultSet.getInt("boughtqty");
-            double money = resultSet.getDouble("money");
-            String date = resultSet.getString("date");
+                BuyOffer buyOffer = new BuyOffer(uuid, player, material, nbt, custom, price, totalqty, boughtqty, money, date);
 
-            BuyOffer buyOffer = new BuyOffer(uuid, player, material, nbt, custom, price, totalqty, boughtqty, money, date);
-
-            return buyOffer;
+                return buyOffer;
+            }
         } catch (SQLException e) {
             OfferHelper.sendValidationMessage(cmdSender, "Something went wrong with retrieving buyoffers from the database. Contact an admin!");
         }
@@ -47,7 +47,7 @@ public class BuyOfferDB {
     }
 
     // Function to retrieve BuyOffers from the database and return them in an ArrayList
-    public List<BuyOffer> retrieveBuyOffers(Player cmdSender, String sqlQuery) {
+    public List<BuyOffer> retrieveBuyOfferList(Player cmdSender, String sqlQuery) {
 
         // Create empty ArrayList to add BuyOffer to
         List<BuyOffer> buyOfferList = new ArrayList<>();

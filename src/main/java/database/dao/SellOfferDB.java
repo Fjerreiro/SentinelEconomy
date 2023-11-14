@@ -16,11 +16,14 @@ public class SellOfferDB {
     }
 
     // Function to retrieve a single SellOffer from the database and return it
-
+    public SellOffer retrieveSellOffer(Player cmdSender, String sqlQuery) {
+        return null;
+    }
 
     // Function to retrieve SellOffers from the database and return them in an ArrayList
-
-
+    public List<SellOffer> retrieveSellOfferList(Player cmdSender, String sqlQuery) {
+        return null;
+    }
 
     // Function to insert a single SellOffer into the database
     public boolean insertSellOffer(Player player, SellOffer sellOffer) {

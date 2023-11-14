@@ -101,8 +101,11 @@ public class BuyOfferCmd implements CommandExecutor {
             }
         buyOffer.setMaterial(String.valueOf(material));
 
-        // Check if a SELL offer can immediately be filled with this buy offer
+        // Check if a SellOffer can immediately be filled with this buy offer
+        String sqlQuery = "";
+        if (sellOfferDB.retrieveSellOfferList(player, sqlQuery) != null) {
 
+        }
 
 
 
