@@ -1,6 +1,7 @@
 package commands;
 
 import database.dao.BuyOfferDB;
+import database.dao.SellOfferDB;
 import me.fjerreiro.sentineleconomy.OfferHelper;
 import net.milkbowl.vault.economy.Economy;
 import objects.BuyOffer;
@@ -19,9 +20,11 @@ import static me.fjerreiro.sentineleconomy.SentinelEconomy.getEconomy;
 public class BuyOfferCmd implements CommandExecutor {
 
     private final BuyOfferDB buyOfferDB;
+    private final SellOfferDB sellOfferDB;
 
-    public BuyOfferCmd(BuyOfferDB buyOfferDB) {
+    public BuyOfferCmd(BuyOfferDB buyOfferDB, SellOfferDB sellOfferDB) {
         this.buyOfferDB = buyOfferDB;
+        this.sellOfferDB = sellOfferDB;
     }
 
     @Override
@@ -97,6 +100,14 @@ public class BuyOfferCmd implements CommandExecutor {
                 }
             }
         buyOffer.setMaterial(String.valueOf(material));
+
+        // Check if a SELL offer can immediately be filled with this buy offer
+
+
+
+
+
+
 
         // Insert the buyoffer into the database
             buyOffer.setDate(String.valueOf(LocalDateTime.now()));
