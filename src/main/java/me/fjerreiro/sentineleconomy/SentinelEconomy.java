@@ -40,7 +40,7 @@ public final class SentinelEconomy extends JavaPlugin {
 
         //Command initialization:
         getCommand("selloffer").setExecutor(new SellOfferCmd(sellOfferDB));
-        getCommand("buyoffer").setExecutor(new BuyOfferCmd(buyOfferDB));
+        getCommand("buyoffer").setExecutor(new BuyOfferCmd(buyOfferDB, sellOfferDB));
 
 
         //Set up the hook between Vault and SentinelEconomy.

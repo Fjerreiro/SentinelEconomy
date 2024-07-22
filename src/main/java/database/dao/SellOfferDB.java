@@ -6,6 +6,7 @@ import me.fjerreiro.sentineleconomy.objects.SellOffer;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.List;
 
 public class SellOfferDB {
     private Connection connection;
@@ -14,6 +15,17 @@ public class SellOfferDB {
         this.connection = databaseConnection.getConnection();
     }
 
+    // Function to retrieve a single SellOffer from the database and return it
+    public SellOffer retrieveSellOffer(Player cmdSender, String sqlQuery) {
+        return null;
+    }
+
+    // Function to retrieve SellOffers from the database and return them in an ArrayList
+    public List<SellOffer> retrieveSellOfferList(Player cmdSender, String sqlQuery) {
+        return null;
+    }
+
+    // Function to insert a single SellOffer into the database
     public boolean insertSellOffer(Player player, SellOffer sellOffer) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO selloffers (player, material, nbt, custom, price, totalqty, soldqty, money, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             preparedStatement.setString(1, sellOffer.getPlayer());
@@ -27,8 +39,18 @@ public class SellOfferDB {
             return true;
         } catch (SQLException e) {
             OfferHelper.sendValidationMessage(player, "Something went wrong with committing your listing to the database! Contact an administrator.");
-            System.out.println(e);
             return false;
         }
+    }
+
+    // Function to update a single SellOffer in the database
+    public boolean updateSellOffer(Player cmdSender, SellOffer sellOffer) {
+        return true;
+    }
+
+
+    // Function to update a list of SellOffers in the database
+    public boolean updateSellOfferList(Player cmdSender, List<SellOffer> sellOfferList) {
+        return true;
     }
 }
