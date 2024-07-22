@@ -1,9 +1,8 @@
 package database.dao;
 
-import database.connection.DatabaseConnection;
-import me.fjerreiro.sentineleconomy.OfferHelper;
-import objects.BuyOffer;
-import objects.SellOffer;
+import me.fjerreiro.sentineleconomy.database.DatabaseConnection;
+import me.fjerreiro.sentineleconomy.helpers.OfferHelper;
+import me.fjerreiro.sentineleconomy.objects.BuyOffer;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;

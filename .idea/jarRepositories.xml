@@ -31,5 +31,15 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="william278.net" />
+      <option name="name" value="william278.net" />
+      <option name="url" value="https://repo.william278.net/releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="william278-releases" />
+      <option name="name" value="William278" />
+      <option name="url" value="https://repo.william278.net/releases" />
+    </remote-repository>
   </component>
 </project>

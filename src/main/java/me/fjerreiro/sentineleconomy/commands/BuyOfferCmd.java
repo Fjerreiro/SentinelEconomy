@@ -1,9 +1,9 @@
-package commands;
+package me.fjerreiro.sentineleconomy.commands;
 
 import database.dao.BuyOfferDB;
-import me.fjerreiro.sentineleconomy.OfferHelper;
+import me.fjerreiro.sentineleconomy.helpers.OfferHelper;
 import net.milkbowl.vault.economy.Economy;
-import objects.BuyOffer;
+import me.fjerreiro.sentineleconomy.objects.BuyOffer;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

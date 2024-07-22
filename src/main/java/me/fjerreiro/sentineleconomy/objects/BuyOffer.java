@@ -1,4 +1,4 @@
-package objects;
+package me.fjerreiro.sentineleconomy.objects;
 
 public class BuyOffer {
 

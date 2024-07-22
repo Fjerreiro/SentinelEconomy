@@ -1,8 +1,8 @@
-package commands;
+package me.fjerreiro.sentineleconomy.commands;
 
 import database.dao.SellOfferDB;
-import me.fjerreiro.sentineleconomy.OfferHelper;
-import objects.SellOffer;
+import me.fjerreiro.sentineleconomy.helpers.OfferHelper;
+import me.fjerreiro.sentineleconomy.objects.SellOffer;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

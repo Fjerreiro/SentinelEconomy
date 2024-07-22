@@ -1,4 +1,4 @@
-package me.fjerreiro.sentineleconomy;
+package me.fjerreiro.sentineleconomy.helpers;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

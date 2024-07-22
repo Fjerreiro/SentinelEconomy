@@ -1,15 +1,15 @@
 package me.fjerreiro.sentineleconomy;
 
-import commands.BuyOfferCmd;
-import commands.SellOfferCmd;
+import me.fjerreiro.sentineleconomy.commands.BuyOfferCmd;
+import me.fjerreiro.sentineleconomy.commands.SellOfferCmd;
 import database.dao.BuyOfferDB;
 import database.dao.SellOfferDB;
-import database.connection.DatabaseConnection;
+import me.fjerreiro.sentineleconomy.database.DatabaseConnection;
+import me.fjerreiro.sentineleconomy.hooks.HuskClaimsAPIHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.sql.SQLException;
 
 public final class SentinelEconomy extends JavaPlugin {
@@ -47,6 +47,10 @@ public final class SentinelEconomy extends JavaPlugin {
         if (!setupEconomy() ) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
+
+        if (getServer().getPluginManager().getPlugin("HuskClaims") != null) {
+            HuskClaimsAPIHook huskClaimsAPIHook = new HuskClaimsAPIHook();
+            }
         }
     }
 

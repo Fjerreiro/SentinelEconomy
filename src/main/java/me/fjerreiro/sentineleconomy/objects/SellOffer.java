@@ -1,6 +1,7 @@
-package objects;
+package me.fjerreiro.sentineleconomy.objects;
 
 public class SellOffer {
+
     private String uuid;
     private String player;
     private String material;
