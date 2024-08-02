@@ -1,12 +1,12 @@
 package me.fjerreiro.sentineleconomy.hooks;
 
-import net.william278.huskclaims.api.BukkitHuskClaimsAPI;
+import net.william278.huskclaims.api.HuskClaimsAPI;
 
 public class HuskClaimsAPIHook {
 
-    private final BukkitHuskClaimsAPI huskClaimsAPI;
+    private final HuskClaimsAPI huskClaimsAPI;
 
     public HuskClaimsAPIHook() {
-        this.huskClaimsAPI = BukkitHuskClaimsAPI.getInstance();
+        this.huskClaimsAPI = HuskClaimsAPI.getInstance();
     }
 }

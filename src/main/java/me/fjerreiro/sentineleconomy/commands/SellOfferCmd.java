@@ -45,7 +45,6 @@ public class SellOfferCmd implements CommandExecutor {
         Material material;
         Inventory inventory = player.getInventory();
 
-
         // Check the third argument for a valid integer and set it for price
         try {
             sellOffer.setPrice(Double.parseDouble(strings[2]));

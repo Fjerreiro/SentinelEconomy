@@ -4,6 +4,8 @@ import database.dao.BuyOfferDB;
 import me.fjerreiro.sentineleconomy.helpers.OfferHelper;
 import net.milkbowl.vault.economy.Economy;
 import me.fjerreiro.sentineleconomy.objects.BuyOffer;
+import net.william278.huskclaims.BukkitHuskClaims;
+import net.william278.huskclaims.HuskClaims;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 
-import static me.fjerreiro.sentineleconomy.SentinelEconomy.getEconomy;
+import static me.fjerreiro.sentineleconomy.hooks.VaultHook.getEconomy;
 
 public class BuyOfferCmd implements CommandExecutor {
 
